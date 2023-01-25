@@ -9,6 +9,7 @@
           username: "",
           password: "",
         },
+        isError: false,
       };
     },
     methods: {
@@ -22,7 +23,8 @@
           this.$cookies.set("token", result.token);
           this.$router.push("/orgs");
         } catch (err) {
-          throw err;
+          this.isError = true
+          throw err
         }
       },
       async getOrgs() {
@@ -42,7 +44,7 @@
         <b-col class="first-col" md="6">
           <div class="p-5">
             <h3 class="text-light text-center">Dev Test by Doppio Tech</h3>
-            <h5 class="text-light text-center">Presented by Nattawat Samsee</h5>
+            <h5 class="text-light text-center">Developed by Nattawat Samsee</h5>
           </div>
           
         </b-col>
@@ -76,6 +78,9 @@
                   type="password"
                 ></b-form-input>
               </b-form-group>
+              <template v-if="isError">
+                <p class="text-danger">** Please try again **</p>
+              </template>
               <b-button
                 type="submit"
                 pill

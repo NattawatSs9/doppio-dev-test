@@ -4,6 +4,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/',
+      name: 'dummy',
+      component: () => import('../views/LoginView.vue')
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue')
@@ -21,19 +26,29 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach(async (to, from) => {
-  console.log("Hello")
-  const { cookies } = useCookies();
-  if (to.name !== "login") {
-    if (!cookies.get("token")) {
-      router.push("/login")
-    }
-    else return true
+router.beforeEach((to, from) => {
+  const {cookies} = useCookies()
+  if (to.name === "dummy") {
+    router.push("/login")
   }
-  else {
+  if (to.name === "login" && from.name === "login") { // bypass recursion
+    return false
+  }
+  if (to.name === "organization" && from.name === "organization") { // bypass recursion
+    return false
+  }
+  if (to.name === "organization" && cookies.get("token")) {
     return true
   }
-  
+  else if (to.name === "organization" && !cookies.get("token")) {
+    router.push("/login")
+  }
+  if (to.name === "login" && cookies.get("token")) {
+    router.push("/orgs")
+  }
+  else if (to.name === "login" && !cookies.get("token")) {
+    return true
+  }
 })
 
 export default router
