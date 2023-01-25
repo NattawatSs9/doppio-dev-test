@@ -12,6 +12,11 @@ const router = createRouter({
       path: '/orgs',
       name: 'organization',
       component: () => import('../views/OrganizationView.vue')
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: 'notfound',
+      component: () => import('../views/NotFound.vue')
     }
   ]
 })
@@ -20,7 +25,9 @@ router.beforeEach(async (to, from) => {
   console.log("Hello")
   const { cookies } = useCookies();
   if (to.name !== "login") {
-    if (!cookies.get("token")) return false
+    if (!cookies.get("token")) {
+      router.push("/login")
+    }
     else return true
   }
   else {

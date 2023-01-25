@@ -1,14 +1,17 @@
 <script lang="ts">
     import OrganizationTable from '@/components/OrganizationTable.vue';
+    import Navbar from '@/components/Navbar.vue';
     export default {
         components: {
-            OrganizationTable
+            OrganizationTable,
+            Navbar
         }
     }
 
 </script>
 
 <template>
+    <Navbar/>
     <div class="orgs-background">
         <h2 class="text-center">Organization Table</h2>
         <br>

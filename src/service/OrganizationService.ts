@@ -1,16 +1,17 @@
 import { API } from "./api";
 import axios from "axios";
+import type { OrganizationResponse } from "@/model/OrganizationModel";
 export class OrganizationService {
-  static async get() {
+  static async get() : Promise<OrganizationResponse> {
     try {
         axios.defaults.withCredentials = true;
-        let result = await axios.get(API.organization + "?pagesize=20&page=1&sortcol=id&sortorder=desc", 
+        let result = await axios.get<OrganizationResponse>(API.organization + "?pagesize=20&page=1&sortcol=id&sortorder=desc", 
         { 
             headers: {
-                "Cookie": "access_token=eyJ1c2VybmFtZSI6IkZsYXZpbyJ9.eyJ1c2VybmFtZSI6IkZsYXZpbyJ9.eyJ1c2VybmFtZSI6IkZsYXZpbyJ9; Path=/; Expires=Wed, 24 Jan 2024 07:00:13 GMT;"
+                "access_token": "eyJ1c2VybmFtZSI6IkZsYXZpbyJ9.eyJ1c2VybmFtZSI6IkZsYXZpbyJ9.eyJ1c2VybmFtZSI6IkZsYXZpbyJ9"
             }, 
             withCredentials: true });
-        console.log(result);
+        return result.data
         } catch (err) {
         throw err;
     }

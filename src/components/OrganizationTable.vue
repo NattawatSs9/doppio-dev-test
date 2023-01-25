@@ -1,7 +1,9 @@
 <script lang="ts">
 import type { OrganizationResponse } from '@/model/OrganizationModel';
+import { OrganizationService } from '@/service/OrganizationService';
 
     export default {
+        name: "OrganizationTable",
         data() {
             return {
                 dummy: {
@@ -31,26 +33,44 @@ import type { OrganizationResponse } from '@/model/OrganizationModel';
                             timestamp: "2022-10-29T12:21:55.978+00:00"
                         },
                     ]
-                } as OrganizationResponse
+                } as OrganizationResponse,
+                orgs: {} as OrganizationResponse
+            }
+        },
+        async created() {
+            await this.getOrganization()
+        },
+        methods: {
+            async getOrganization() {
+                try {
+                    const result = await OrganizationService.get()
+                    this.orgs = result
+                }
+                catch(err) {
+                    throw(err)
+                }
             }
         }
     }
 </script>
 <template>
-    <div class="table-responsive-md">
-        <table class="table topics">
+    <div class="table-responsive">
+        <table class="table topics" style="width:100%">
+            <col style="width: 30%;" />
+            <col style="width: 40%;" />
+            <col style="width: 30%;" />
             <thead>
                 <tr class="table-active">
                     <th class="font-weight-bold">ID</th>
-                    <th class="font-weight-bold" colspan="2">Name</th>
+                    <th class="font-weight-bold cell-fix-width">Name</th>
                     <th class="font-weight-bold">Status</th>
                 </tr>
             </thead>
             <tbody class="tbody-responsive">
-                <template v-for="org in dummy.data">
+                <template v-for="org in orgs.data" :key="org.id">
                     <tr>
                         <th class="font-weight-bold">{{ org.id }}</th>
-                        <td colspan="2">{{ org.name }}</td>
+                        <td class="cell-fix-width">{{ org.name }}</td>
                         <td :class="org.rec_status == 1 ? 'table-success' : 'table-danger'">{{ org.rec_status == 1 ? "Active" : "Inactive" }}</td>
                     </tr>
                 </template>
@@ -59,5 +79,12 @@ import type { OrganizationResponse } from '@/model/OrganizationModel';
     </div>
 </template>
 <style scoped>
-    .topics tr { line-height: 40px; }
+    .topics tr { line-height: 30px; }
+    .table-responsive { height: 600px !important;}
+    .cell-fix-width {
+        max-width: 100px; /*or whatever*/
+        text-overflow: ellipsis;
+        overflow: hidden; 
+        white-space: nowrap;
+    }
 </style>
